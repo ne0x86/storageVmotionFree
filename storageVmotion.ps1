@@ -11,7 +11,7 @@ Function showMenu {
     Write-Host "================ Menu ================"
     Write-Host "1. Mostrar listado VMs"
     Write-Host "2. Mostrar listado Datastores"
-   	Write-Host "3. Realizar migracion"
+    Write-Host "3. Realizar migracion"
     Write-Host "0. Exit"
     Write-Host ""
 }
@@ -27,7 +27,7 @@ Function showMenu {
         function migrateVMs {
             $VMName= Read-Host -Prompt "Escribe el nombre de la VM que quieres migrar."
             $VM=Get-VM -Name $VMName
-			      Get-Datastore | select name
+	    Get-Datastore | select name
             Write-Host "Escribe el nombre de el datastore de destino tal y como se muestra arriba:"
             write-host ""
             $datastore = read-host;
