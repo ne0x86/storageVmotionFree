@@ -53,7 +53,7 @@ function migrateVMs {
 	}  
 
 	Write-Host "Migracion completada"
-	Write-Host "Recuerda revisar que los servicios hayanb arrancado correctamente"
+	Write-Host "Recuerda revisar que los servicios hayan arrancado correctamente"
 }
                        
         showmenu
