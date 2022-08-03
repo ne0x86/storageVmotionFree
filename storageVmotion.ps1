@@ -52,8 +52,8 @@ function migrateVMs {
 	Start-VM -VM $VM
 	}  
 
-Write-Host "Migracion completada"
-Write-Host "Recuerda revisar que los servicios hayanb arrancado correctamente"
+	Write-Host "Migracion completada"
+	Write-Host "Recuerda revisar que los servicios hayanb arrancado correctamente"
 }
                        
         showmenu
