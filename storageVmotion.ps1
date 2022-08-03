@@ -4,7 +4,7 @@ Connect-VIServer -Server "vcenter.consoso.com"
 
 Start-Sleep -s 3
 
-Function showMenu {
+function showMenu {
     Clear-Host
     Write-Host "Storage tools for VMware | fjuan"
     Write-Host ""
@@ -15,44 +15,42 @@ Function showMenu {
     Write-Host "0. Exit"
     Write-Host ""
 }
- 
-        function showVMs {
-            Get-VM | Select-Object Name,@{N="Datastore";E={[string]::Join(',',(Get-Datastore -Id $_.DatastoreIdList | Select -ExpandProperty Name))}}
-        }
+
+function showVMs {
+   Get-VM | Select-Object Name,@{N="Datastore";E={[string]::Join(',',(Get-Datastore -Id $_.DatastoreIdList | Select -ExpandProperty Name))}}
+}
         
-        function showDS {
-            Get-Datastore | select name, capacityGB, FreespaceGB
-        }		
+function showDS {
+    Get-Datastore | select name, capacityGB, FreespaceGB
+}		
         
-        function migrateVMs {
-            $VMName= Read-Host -Prompt "Escribe el nombre de la VM que quieres migrar."
-            $VM=Get-VM -Name $VMName
-	    Get-Datastore | select name
-            Write-Host "Escribe el nombre de el datastore de destino tal y como se muestra arriba:"
-            write-host ""
-            $datastore = read-host;
+function migrateVMs {
+    $VMName= Read-Host -Prompt "Escribe el nombre de la VM que quieres migrar."
+    $VM=Get-VM -Name $VMName
+    Get-Datastore | select name
+    Write-Host "Escribe el nombre de el datastore de destino tal y como se muestra arriba:"
+    write-host ""
+    $datastore = read-host;
+    $OriginalState= $vm.PowerState
+    
+	if ($OriginalState -eq "PoweredOn") {
+        Write-Host "Apagando VM..." $VM.Name
+        Shutdown-VMGuest -VM $VM -Confirm:$false
+	
+	do {
+	Start-Sleep -s 5
+	$VM = Get-VM -Name $VMName
+	$status = $vm.PowerState
+	   }
+	until($status -eq "PoweredOff")
+	}
 
-            $OriginalState= $vm.PowerState
-            if ($OriginalState -eq "PoweredOn") {
-            Write-Host "Apagando VM..." $VM.Name
-            Shutdown-VMGuest -VM $VM -Confirm:$false
-            
-            do {
-
-            Start-Sleep -s 5
-
-            $VM = Get-VM -Name $VMName
-            $status = $vm.PowerState
-            }
-            until($status -eq "PoweredOff")
-            }
-
-Write-Host $VM.Name "apagada, procediendo a la migracion..."
-Move-VM -Datastore $datastore -VM $VM -DiskStorageFormat Thin
-if ($OriginalState -eq "PoweredOn") {
-Write-Host "Arrancando" $VM.Name
-Start-VM -VM $VM
-}  
+	Write-Host $VM.Name "apagada, procediendo a la migracion..."
+	Move-VM -Datastore $datastore -VM $VM -DiskStorageFormat Thin
+	if ($OriginalState -eq "PoweredOn") {
+	Write-Host "Arrancando" $VM.Name
+	Start-VM -VM $VM
+	}  
 
 Write-Host "Migracion completada"
 Write-Host "Recuerda revisar que los servicios hayanb arrancado correctamente"
