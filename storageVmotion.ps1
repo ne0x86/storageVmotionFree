@@ -1,6 +1,6 @@
 write-host -ForegroundColor Green "Conectando a vcenter.contoso.com..."
 
-Connect-VIServer -Server "vcenter.consoso.com"
+Connect-VIServer -Server "vcenter.contoso.com"
 
 Start-Sleep -s 3
 
